@@ -51,7 +51,17 @@ class SpringBootMetadataReader {
 	 * @throws IOException on load error
 	 */
 	SpringBootMetadataReader(ObjectMapper objectMapper, RestTemplate restTemplate, String url) throws IOException {
-		this.content = objectMapper.readTree(restTemplate.getForObject(url, String.class));
+		if (url.equals("https://spring.io/project_metadata/spring-boot-static")) {
+			String projectMetadataJson = getStaticSpringBootProjectMetadata();
+			this.content = objectMapper.readTree(projectMetadataJson);
+		}
+		else {
+			this.content = objectMapper.readTree(restTemplate.getForObject(url, String.class));
+		}
+	}
+
+	private static String getStaticSpringBootProjectMetadata() {
+		return "{\"id\":\"spring-boot\",\"name\":\"Spring Boot\",\"projectReleases\":[{\"version\":\"3.0.2-SNAPSHOT\",\"versionDisplayName\":\"3.0.2-SNAPSHOT\",\"current\":false,\"releaseStatus\":\"SNAPSHOT\",\"snapshot\":true},{\"version\":\"3.0.1\",\"versionDisplayName\":\"3.0.1\",\"current\":true,\"releaseStatus\":\"GENERAL_AVAILABILITY\",\"snapshot\":false},{\"version\":\"2.7.8-SNAPSHOT\",\"versionDisplayName\":\"2.7.8-SNAPSHOT\",\"current\":false,\"releaseStatus\":\"SNAPSHOT\",\"snapshot\":true},{\"version\":\"2.7.7\",\"versionDisplayName\":\"2.7.7\",\"current\":false,\"releaseStatus\":\"GENERAL_AVAILABILITY\",\"snapshot\":false},{\"version\":\"2.6.14\",\"versionDisplayName\":\"2.6.14\",\"current\":false,\"releaseStatus\":\"GENERAL_AVAILABILITY\",\"snapshot\":false},{\"version\":\"2.5.14\",\"versionDisplayName\":\"2.5.14\",\"current\":false,\"releaseStatus\":\"GENERAL_AVAILABILITY\",\"snapshot\":false},{\"version\":\"2.4.13\",\"versionDisplayName\":\"2.4.13\",\"current\":false,\"releaseStatus\":\"GENERAL_AVAILABILITY\",\"snapshot\":false}]}\n";
 	}
 
 	/**
