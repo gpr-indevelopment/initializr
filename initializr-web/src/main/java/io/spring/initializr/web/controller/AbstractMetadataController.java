@@ -44,11 +44,16 @@ public abstract class AbstractMetadataController {
 	 * @see io.spring.initializr.metadata.InitializrConfiguration.Env#isForceSsl()
 	 */
 	protected String generateAppUrl() {
-		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentServletMapping();
-		if (isForceSsl()) {
-			builder.scheme("https");
+		try {
+			ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentServletMapping();
+			if (isForceSsl()) {
+				builder.scheme("https");
+			}
+			return builder.build().toString();
 		}
-		return builder.build().toString();
+		catch (Exception ex) {
+			return "http://localhost:8080";
+		}
 	}
 
 	protected String createUniqueId(String content) {
