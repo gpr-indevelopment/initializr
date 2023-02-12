@@ -35,6 +35,8 @@ import io.spring.initializr.generator.project.ProjectGenerator;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
@@ -60,6 +62,8 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 	private final ProjectAssetGenerator<Path> projectAssetGenerator = new DefaultProjectAssetGenerator();
 
 	private final transient Map<Path, List<Path>> temporaryFiles = new ConcurrentHashMap<>();
+
+	private static final Log logger = LogFactory.getLog(ProjectGenerationInvoker.class);
 
 	public ProjectGenerationInvoker(ApplicationContext parentApplicationContext,
 			ProjectRequestToDescriptionConverter<R> requestConverter) {
@@ -87,6 +91,8 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 					projectGenerationContext) -> customizeProjectGenerationContext(projectGenerationContext, metadata));
 			ProjectGenerationResult result = projectGenerator.generate(description,
 					generateProject(description, request));
+			logger.info(String.format("Project generated at path: %s",
+					result.getRootDirectory().toFile().getAbsolutePath()));
 			addTempFile(result.getRootDirectory(), result.getRootDirectory());
 			return result;
 		}

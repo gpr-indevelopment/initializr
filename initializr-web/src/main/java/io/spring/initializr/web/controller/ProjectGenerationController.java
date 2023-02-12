@@ -173,6 +173,7 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 						}
 					});
 		}
+		logger.info(String.format("Arquive created at path: %s", archive.toFile().getAbsolutePath()));
 		return archive;
 	}
 
